@@ -32,7 +32,7 @@ const categoryControls = {
 
     deleteCategory: async(req, res) =>{
         try {
-   
+            
 
             await Category.findByIdAndDelete(req.params.id);
             res.json({msg: "Deleted a Category"});

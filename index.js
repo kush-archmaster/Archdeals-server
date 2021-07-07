@@ -22,6 +22,7 @@ app.use(fileUpload({
 app.use('/user', require('./routes/userRoutes'));  //so path it will go on will be /user/register for registering
 app.use('/api', require('./routes/categoryRoutes'));
 app.use('/api', require('./routes/uploadImg'));
+app.use('/api', require('./routes/productRoutes'));
 
 
 app.get('/' ,(req,res) =>{
