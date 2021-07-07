@@ -1,5 +1,7 @@
 const Product = require('../../db/models/product');
 
+
+
 const productControl = {
     getProducts: async(req, res) =>{
         try {
