@@ -12,7 +12,7 @@ class Features {
              const sortType = this.queryString.sort.split(',').join(' ');
              //console.log(sortType);
 
-             this.query = this.query.sort(sortBy); //basically Product.find().sort(sortBy)
+             this.query = this.query.sort(sortType); //basically Product.find().sort(sortBy)
           }
           //if no sort paramter, sort it by timestamp
           else{
@@ -87,12 +87,13 @@ const productControl = {
         try {
             const {product_id, title, price, description, content, images, category} = req.body;
             if(!images) return res.status(400).json({msg: "No image upload"});
-
-            const product = await Products.findOne({product_id});
+            
+            const product = await Product.findOne({product_id});
             if(product)
                 return res.status(400).json({msg: "This product already exists."});
 
-            const newProduct = new Products({
+
+            const newProduct = new Product({
                 product_id, title: title.toLowerCase(), price, description, content, images, category
             });
 
@@ -106,7 +107,7 @@ const productControl = {
 
     deleteProduct: async(req, res) =>{
         try {
-            await Products.findByIdAndDelete(req.params.id)
+            await Product.findByIdAndDelete(req.params.id)
             res.json({msg: "Deleted a Product"})
         } catch (err) {
             return res.status(500).json({msg: err.message})
@@ -118,7 +119,7 @@ const productControl = {
             const {title, price, description, content, images, category} = req.body;
             if(!images) return res.status(400).json({msg: "No image upload"})
 
-            await Products.findOneAndUpdate({_id: req.params.id}, {
+            await Product.findOneAndUpdate({_id: req.params.id}, {
                 title: title.toLowerCase(), price, description, content, images, category
             })
 

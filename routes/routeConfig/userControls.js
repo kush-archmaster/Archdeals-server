@@ -32,7 +32,7 @@ const userControl = {
                 maxAge: 7*24*60*60*1000 
             })
 
-            res.json({accesstoken})
+            res.json({success:'Registered'})
 
         } catch (err) {
             return res.status(500).json({error: err.message})
@@ -49,7 +49,7 @@ const userControl = {
 
                 const accesstoken = createAccessToken({id: user.id})
 
-                res.json({accesstoken})
+                res.json({accesstoken});
             })
 
         } catch (err) {
@@ -67,7 +67,7 @@ const userControl = {
             if(!user) return res.status(400).json({msg: "User does not exist."})
 
             const isMatch = await bcrypt.compare(password, user.password)
-            if(!isMatch) return res.status(400).json({msg: "Incorrect password."})
+            if(!isMatch) return res.status(400).json({msg: "Invalid Credentials"})
 
             // If login success , create access token and refresh token
             const accesstoken = createAccessToken({id: user._id})
@@ -79,7 +79,7 @@ const userControl = {
                 maxAge: 7*24*60*60*1000 // 7d
             })
 
-            res.json({accesstoken})
+            res.json({success: 'Logged In'})
 
         } catch (err) {
             return res.status(500).json({msg: err.message})
@@ -100,7 +100,7 @@ const userControl = {
             const user = await User.findById(req.user.id).select('-password')  //gives data removing password from it
             if(!user) return res.status(400).json({msg: "User does not exist."})
 
-            res.json(user)
+            res.json(user);
         } catch (err) {
             return res.status(500).json({msg: err.message})
         }
