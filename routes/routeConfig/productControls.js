@@ -8,7 +8,18 @@ class Features {
     }
 
     sorting(){
+         if(this.queryString.sort){
+             const sortType = this.queryString.sort.split(',').join(' ');
+             //console.log(sortType);
 
+             this.query = this.query.sort(sortBy); //basically Product.find().sort(sortBy)
+          }
+          //if no sort paramter, sort it by timestamp
+          else{
+            this.query = this.query.sort('-createdAt');
+          }
+
+         return this;
     };
 
     filtering(){
@@ -17,24 +28,34 @@ class Features {
         //console.log(queryObj); before filtering
 
         const excludeFields = ['page', 'sort', 'limit']  //deletes all params if insde queryObj
+        //it helps us to focus only on that one param for filtering
         excludeFields.forEach(el => delete(queryObj[el]));
        // console.log(queryObj); //after filtering
 
        let queryStr = JSON.stringify(queryObj);
+
    //    when query given as price[gt]=230 use square brkts
        queryStr = queryStr.replace(/\b(gte|gt|lt|lte|regex)\b/g, match => '$' + match);
+       //regex is for string searching
+       //rest are for price searching
        //console.log({queryObj,queryStr});  //Json string
 
-       //parsing it back in object
+       //parsing it back in object ad then Product.find( with queryString)
        this.query.find(JSON.parse(queryStr));
-
-       console.log({queryStr})
 
         return this;
     };
 
     paginate(){
+        const page = this.queryString.page * 1 || 1;
+        const limit = this.queryString.limit * 1 || 9;
+        const skip = (page - 1) * limit;
 
+        //Product.find().skip(skip).limit(limit); 
+        //to skip certain amt of records per page and limit them
+        this.query = this.query.skip(skip).limit(limit);
+
+        return this;
     };
 }
 
@@ -46,10 +67,16 @@ const productControl = {
             //queryString = req.query (passed as param)
             const features = new Features(Product.find(), req.query)  //req.query
             .filtering() //this will filter according to our requirement
-              
+            .sorting()  //for sorting products 
+            .paginate(); //for distributing data across pages
+
             const products = await features.query; //query == Product.find()
 
-            res.json(products);
+            res.json({
+                status: 'success',
+                result: products.length,
+                products: products
+            })
 
         } catch (err) {
             return res.status(500).json({msg: err.message});
