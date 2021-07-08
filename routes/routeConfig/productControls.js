@@ -1,11 +1,53 @@
 const Product = require('../../db/models/product');
 
+//Filtering , sorting and pagination of products
+class Features {
+    constructor(query, queryString){
+        this.query = query;
+        this.queryString = queryString;
+    }
+
+    sorting(){
+
+    };
+
+    filtering(){
+        //will store all the params passed 
+        const queryObj = {...this.queryString} //queryString = req.query
+        //console.log(queryObj); before filtering
+
+        const excludeFields = ['page', 'sort', 'limit']  //deletes all params if insde queryObj
+        excludeFields.forEach(el => delete(queryObj[el]));
+       // console.log(queryObj); //after filtering
+
+       let queryStr = JSON.stringify(queryObj);
+   //    when query given as price[gt]=230 use square brkts
+       queryStr = queryStr.replace(/\b(gte|gt|lt|lte|regex)\b/g, match => '$' + match);
+       //console.log({queryObj,queryStr});  //Json string
+
+       //parsing it back in object
+       this.query.find(JSON.parse(queryStr));
+
+       console.log({queryStr})
+
+        return this;
+    };
+
+    paginate(){
+
+    };
+}
+
 
 
 const productControl = {
     getProducts: async(req, res) =>{
         try {
-            const products = await Product.find();
+            //queryString = req.query (passed as param)
+            const features = new Features(Product.find(), req.query)  //req.query
+            .filtering() //this will filter according to our requirement
+              
+            const products = await features.query; //query == Product.find()
 
             res.json(products);
 
