@@ -9,7 +9,9 @@ router.get('/refresh_token', userControl.refreshToken)
 router.post('/login', userControl.login)
 router.get('/logout', userControl.logout)
 
+
 //info of the user authenticated after verifying
 router.get('/info', authenticate,  userControl.getUser)
+router.patch('/addcart', authenticate, userControl.addCart)
 
 module.exports = router;
