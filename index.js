@@ -23,7 +23,7 @@ app.use('/user', require('./routes/userRoutes'));  //so path it will go on will 
 app.use('/api', require('./routes/categoryRoutes'));
 app.use('/api', require('./routes/uploadImg'));
 app.use('/api', require('./routes/productRoutes'));
-
+app.use('/api', require('./routes/paymentRoutes'));
 
 app.get('/' ,(req,res) =>{
     res.send('Hello')
