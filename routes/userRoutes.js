@@ -13,5 +13,6 @@ router.get('/logout', userControl.logout)
 //info of the user authenticated after verifying
 router.get('/info', authenticate,  userControl.getUser)
 router.patch('/addcart', authenticate, userControl.addCart)
+router.get('/history', authenticate, userControl.history)
 
 module.exports = router;

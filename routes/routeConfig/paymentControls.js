@@ -35,7 +35,8 @@ const paymentControls = {
                 return sold(item._id, item.quantity, item.sold);
             })
 
-            await newPayment.save()
+            await newPayment.save();
+            //console.log(newPayment);
             res.json({msg: "Payment Success!"});
             
         } catch (err) {
@@ -44,9 +45,9 @@ const paymentControls = {
     }
 }
 
-const sold = async (id, quantity, prevSold) =>{
+const sold = async (id, quantity, oldsale) =>{
     await Product.findOneAndUpdate({_id: id}, {
-        sold: quantity + prevSold
+        sold: quantity + oldsale
     })
 };
 

@@ -1,4 +1,5 @@
 const User = require('../../db/models/user');
+const Payment = require('../../db/models/payment');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -120,7 +121,17 @@ const userControl = {
         catch (err) {
             return res.status(500).json({msg: err.message});
         }
+    },
+
+    history: async (req, res) =>{
+        try {
+            const history = await Payment.find({user_id: req.user.id}) //coming from auth middleware
+            res.json(history) //this is sent as response
+        } catch (err) {
+            return res.status(500).json({msg: err.message})
+        }
     }
+
 }
 
 
